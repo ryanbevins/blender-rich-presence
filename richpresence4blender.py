@@ -14,6 +14,7 @@ bl_info = {
 import rpc
 import time
 import bpy
+import threading
 
 def register():
 	print('Placeholder')
@@ -26,7 +27,10 @@ time.sleep(5)
 start_time = time.time()
 filename = 'test.blend'
 version_no = '2.79'
-while True:
+
+def updatePresence():
+	threading.Timer(30, updatePresence).start()
+	
 	activity = {
 		"details": "Using Blender " + version_no,
 		"state": "Working on " + filename,
@@ -41,4 +45,5 @@ while True:
 		}
 	}
 	rpc_obj.set_activity(activity)
-	time.sleep(30)
+	
+updatePresence()
