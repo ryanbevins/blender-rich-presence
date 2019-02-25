@@ -15,20 +15,12 @@ import rpc
 import time
 import bpy
 import threading
-import bmesh
-
-
-def unregister():
-	print('Placeholder')
 
 client_id = '434079082339106827'
 rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
 time.sleep(5)
 start_time = time.time()
-filename = 'test.blend'
-version_no = bpy.app.version_string
-
-print("test")
+version_no = bpy.app.version_string.split(' (sub 0)')[0]
 
 class presencePanel(bpy.types.Panel):
 	"""Creates a Panel in the Object properties window"""
@@ -46,7 +38,8 @@ class presenceOperator(bpy.types.Operator):
 	bl_idname = "wm.update_presence"
 	bl_label = "Update Discord Presence"
 	def execute(self, context):
-		print("test2");
+		print(bpy.path.basename(bpy.context.blend_data.filepath))
+		print(bpy.path.basename(bpy.context.blend_data.filepath).split(' (sub 0)'))
 		activity = {
 			"details": "Using Blender " + version_no,
 			"state": bpy.path.basename(bpy.context.blend_data.filepath) + " | Poly Count: " + str(getPolyCount()),
@@ -55,10 +48,10 @@ class presenceOperator(bpy.types.Operator):
 				"start": start_time
 			},
 			"assets": {
-				"small_text": "Blender " + version_no,
+				"small_text": "Blender",
 				"small_image": "blender_logo",
-				"large_text": filename,
-				"large_image": "pretty_render"
+				"large_text": version_no,
+				"large_image": "blender_logo"
 			}
 		}
 		rpc_obj.set_activity(activity)
